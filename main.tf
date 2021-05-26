@@ -13,6 +13,8 @@ variable = secret_key {}
 provider "aws" {
   profile = "default"
   region     = "us-east-1"
+  id = var.id
+  secret_key = var.secret_key
 }
 
 # CRIAR VPC
