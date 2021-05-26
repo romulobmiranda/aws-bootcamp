@@ -7,14 +7,9 @@ terraform {
   }
 }
 
-variable = id {}
-variable = secret_key {}
-
 provider "aws" {
   profile = "default"
   region     = "us-east-1"
-  id = var.id
-  secret_key = var.secret_key
 }
 
 # CRIAR VPC
@@ -75,13 +70,13 @@ resource "aws_security_group" "acessoapp" {
 
 #CRIAR A INSTÂNCIA DO APP
 resource "aws_instance" "app_server" {
-  ami           = "ami-08353a25e80beea3e"
+  ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
 }
 
 # CRIAR INSTÂNCIA RDS
-resource "aws_db_instance" "bdrds"
+resource "aws_db_instance" "bdrds" {
   allocated_storage = 20
   engine = "mysql"
   engine_version = "5.7.30"
@@ -90,5 +85,12 @@ resource "aws_db_instance" "bdrds"
   username = "Admin"
   password = "Admin123456"
   port = "3306"
-  db_subnet_group_name = aws_subnet.priv-subnet.id
   storage_type = "gp2"
+
+  provisioner "remote-exec" {
+    inline = ["sudo apt-get update", "sudo apt-get install python3-dev", 
+    "sudo apt-get install libmysqlclient-dev", "sudo apt-get install unzip", 
+    "sudo apt-get install libpq-dev python-dev libxml2-dev libxslt1-dev libldap2-dev", 
+    "sudo apt-get install libsasl2-dev libffi-dev", "echo Done!"]
+  }
+}  
