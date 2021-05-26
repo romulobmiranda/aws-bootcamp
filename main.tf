@@ -68,11 +68,23 @@ resource "aws_security_group" "acessoapp" {
     }
 }
 
+#GERAR SSH KEYS
+resource "tls_private_key" "example" {
+  algorithm = "RSA"
+  rsa_bits  = 4096
+}
+
+resource "aws_key_pair" "generated_key" {
+  key_name   = var.key_name
+  public_key = tls_private_key.example.public_key_openssh
+}
+
 #CRIAR A INSTÂNCIA DO APP
 resource "aws_instance" "app_server" {
   ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
+  key_name = aws_key_pair.generated_key.key_name
 
   provisioner "remote-exec" {
     inline = ["sudo apt-get update", "sudo apt-get install python3-dev", 
