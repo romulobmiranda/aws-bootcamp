@@ -73,6 +73,13 @@ resource "aws_instance" "app_server" {
   ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
+
+  provisioner "remote-exec" {
+    inline = ["sudo apt-get update", "sudo apt-get install python3-dev", 
+    "sudo apt-get install libmysqlclient-dev", "sudo apt-get install unzip", 
+    "sudo apt-get install libpq-dev python-dev libxml2-dev libxslt1-dev libldap2-dev", 
+    "sudo apt-get install libsasl2-dev libffi-dev", "echo Done!"]
+  }
 }
 
 # CRIAR INSTÂNCIA RDS
@@ -86,11 +93,4 @@ resource "aws_db_instance" "bdrds" {
   password = "Admin123456"
   port = "3306"
   storage_type = "gp2"
-
-  provisioner "remote-exec" {
-    inline = ["sudo apt-get update", "sudo apt-get install python3-dev", 
-    "sudo apt-get install libmysqlclient-dev", "sudo apt-get install unzip", 
-    "sudo apt-get install libpq-dev python-dev libxml2-dev libxslt1-dev libldap2-dev", 
-    "sudo apt-get install libsasl2-dev libffi-dev", "echo Done!"]
-  }
 }  
