@@ -89,6 +89,13 @@ resource "aws_instance" "app_server" {
   key_name = aws_key_pair.generated_key.key_name
 
   provisioner "remote-exec" {
+    connection {
+      type = "ssh"
+      user = "ec2-user"
+      host = self.public_ip
+      private_key = "${file("~/.ssh/authorized_keys)}"
+      timeout ="2m"
+    }
     inline = ["sudo apt-get update", "sudo apt-get install python3-dev", 
     "sudo apt-get install libmysqlclient-dev", "sudo apt-get install unzip", 
     "sudo apt-get install libpq-dev python-dev libxml2-dev libxslt1-dev libldap2-dev", 
