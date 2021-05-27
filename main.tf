@@ -180,7 +180,7 @@ resource "aws_network_interface" "bastion-subnet" {
 
 resource "aws_db_subnet_group" "bdrds" {
   name = "bdrds"
-  subnet_ids = aws_subnet.priv-subnet.id
+  subnet_ids = [aws_subnet.priv-subnet.id]
 }
 
 #CRIAR A INSTÂNCIA DO APP
