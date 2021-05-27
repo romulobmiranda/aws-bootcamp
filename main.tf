@@ -174,12 +174,27 @@ resource "aws_key_pair" "generated_key" {
   public_key = tls_private_key.example.public_key_openssh
 }
 
+resource "aws_network_interface" "public-subnet" {
+  subnet_id = aws_subnet.public-subnet.id
+}
+
+resource "aws_network_interface" "bastion-subnet" {
+  subnet_id = aws_subnet.bastion-subnet.id
+}
+
+resource "aws_db_subnet_group" "bdrds" {
+  name       = "bdrds"
+  subnet_ids = [aws_subnet.priv-subnet.id]
+
 #CRIAR A INSTÂNCIA DO APP
 resource "aws_instance" "app_server" {
   name = "AppServer"
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.public-subnet.id
+  network_interface {
+    network_interface_id = aws_network_interface.public-subnet.id
+    device_index = 0
+  }
 #  security_groups = aws_security_group.acessoapp.id
 }
 
@@ -187,7 +202,10 @@ resource "aws_instance" "bastion" {
   name = "Bastion Host"
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.bastion-subnet.id
+  network_interface {
+    network_interface_id = aws_network_interface.bastion-subnet.id
+    device_index = 0
+  }
   key_name = aws_key_pair.generated_key.key_name
 #  security_groups = aws_security_group.bastion-sg.id
 }
