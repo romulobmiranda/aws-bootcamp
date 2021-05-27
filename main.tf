@@ -118,8 +118,10 @@ resource "aws_security_group" "acessoapp" {
     from_port = 80
     to_port = 80
     protocol = "tcp"
-    cidr_blocks = ["0.0.0.0/0"],
-
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+  
+  ingress {
     from_port = 22
     to_port = 22
     protocol = "tcp"
@@ -178,7 +180,7 @@ resource "aws_instance" "app_server" {
   vpc_security_group_ids = aws_security_group.acessoapp.id
 }
 
-resource "aws_instance" "app_server" {
+resource "aws_instance" "bastion" {
   ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.bastion-subnet.id
