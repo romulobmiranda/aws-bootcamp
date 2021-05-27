@@ -186,6 +186,6 @@ resource "aws_db_instance" "bdrds" {
   password = "Admin123456"
   port = "3306"
   storage_type = "gp2"
-  db_subnet_group_name = aws_subnet.acessords.id
+  db_subnet_group_name = aws_subnet.priv-subnet.id
   vpc_security_group_ids = aws_db_security_group.acessords.id
 }  
