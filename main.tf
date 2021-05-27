@@ -116,7 +116,7 @@ resource "aws_security_group" "acessoapp" {
   ingress {
     from_port = 80
     to_port = 80
-    protocol = "tcp"
+    protocol = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
@@ -173,14 +173,14 @@ resource "aws_key_pair" "generated_key" {
 
 #CRIAR A INSTÂNCIA DO APP
 resource "aws_instance" "app_server" {
-  ami           = "ami-0747bdcabd34c712a"
+  ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
   security_groups = [aws_security_group.acessoapp.id]
 }
 
 resource "aws_instance" "bastion" {
-  ami           = "ami-0747bdcabd34c712a"
+  ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.bastion-subnet.id
   key_name = aws_key_pair.generated_key.key_name
@@ -198,5 +198,5 @@ resource "aws_db_instance" "bdrds" {
   password = "Admin123456"
   port = "3306"
   storage_type = "gp2"
-  security_group_names = [aws_security_group.acessords.id]
+  security_groups = [aws_security_group.acessords.id]
 }  
