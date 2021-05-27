@@ -198,5 +198,5 @@ resource "aws_db_instance" "bdrds" {
   password = "Admin123456"
   port = "3306"
   storage_type = "gp2"
-  security_groups = aws_security_group.acessords.id
+  security_group_names = aws_security_group.acessords.id
 }  
