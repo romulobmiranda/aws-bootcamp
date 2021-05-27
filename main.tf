@@ -108,7 +108,7 @@ resource "aws_instance" "app_server" {
 #    "sudo apt-get install libldap2-dev", 
 #    "sudo apt-get install libsasl2-dev",
 #    "sudo apt-get install libffi-dev"]
-  }
+#  }
 }
 
 # CRIAR INSTÂNCIA RDS
