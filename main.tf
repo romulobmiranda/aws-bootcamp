@@ -184,7 +184,7 @@ resource "aws_network_interface" "bastion-subnet" {
 
 resource "aws_db_subnet_group" "bdrds" {
   name       = "bdrds"
-  subnet_ids = [aws_subnet.priv-subnet.id]
+  subnet_ids = aws_subnet.priv-subnet.id
 }
 
 #CRIAR A INSTÂNCIA DO APP
@@ -203,11 +203,11 @@ resource "aws_instance" "bastion" {
   name = "Bastion Host"
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
+  key_name = aws_key_pair.generated_key.key_name
   network_interface {
     network_interface_id = aws_network_interface.bastion-subnet.id
     device_index = 0
   }
-  key_name = aws_key_pair.generated_key.key_name
 #  security_groups = aws_security_group.bastion-sg.id
 }
 
