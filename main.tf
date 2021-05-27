@@ -89,10 +89,9 @@ resource "aws_route_table_association" "public-subnet" {
   route_table_id = aws_route_table.public-subnet.id
 }
 
-
-resource "aws_db_subnet_group" "default" {
-  subnet_ids = [aws_subnet.priv-subnet.id]
-}
+#resource "aws_db_subnet_group" "default" {
+#  subnet_ids = [aws_subnet.priv-subnet.id]
+#}
 
 #CRIAR O GRUPO DE SEGURANÇA
 resource "aws_security_group" "acessords" {
