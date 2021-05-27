@@ -185,7 +185,7 @@ resource "aws_db_subnet_group" "bdrds" {
 
 #CRIAR A INSTÂNCIA DO APP
 resource "aws_instance" "app_server" {
-  name = "AppServer"
+#name = "AppServer"
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
   network_interface {
@@ -197,7 +197,7 @@ resource "aws_instance" "app_server" {
 
 #CRIAR BASTION HOST
 resource "aws_instance" "bastion" {
-  name = "Bastion Host"
+#name = "Bastion Host"
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
   key_name = aws_key_pair.generated_key.key_name
