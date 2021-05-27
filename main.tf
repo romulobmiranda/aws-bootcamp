@@ -91,8 +91,8 @@ resource "aws_route_table_association" "public-subnet" {
 }
 
 #CRIAR O GRUPO DE SEGURANÇA
-resource "aws_security_group" "acessoapp" {
-    name = "acessoapp"
+resource "aws_security_group" "acessords" {
+    name = "acessords"
     vpc_id = aws_vpc.vpc-bootcamp.id
 
     ingress {
@@ -105,6 +105,25 @@ resource "aws_security_group" "acessoapp" {
     egress {
         from_port = 0
         to_port = 0
+        protocol = "-1"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+}
+
+resource "aws_security_group" "acessoapp" {
+    name = "acessoapp"
+    vpc_id = aws_vpc.vpc-bootcamp.id
+
+    ingress {
+        from_port = 80
+        to_port = 80
+        protocol = "tcp"
+        cidr_blocks = ["0.0.0.0/0"]
+    }
+
+    egress {
+        from_port = 80
+        to_port = 80
         protocol = "-1"
         cidr_blocks = ["0.0.0.0/0"]
     }
@@ -131,7 +150,8 @@ resource "aws_key_pair" "generated_key" {
 resource "aws_instance" "app_server" {
   ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.priv-subnet.id
+  subnet_id = aws_subnet.public-subnet.id
+  vpc_security_group_ids = aws_security_group.acessoapp.id
 }
 
 resource "aws_instance" "app_server" {
@@ -152,4 +172,5 @@ resource "aws_db_instance" "bdrds" {
   password = "Admin123456"
   port = "3306"
   storage_type = "gp2"
+  vpc_security_group_ids = aws_security_group.acessords.id
 }  
