@@ -88,26 +88,26 @@ resource "aws_instance" "app_server" {
   subnet_id = aws_subnet.public-subnet.id
   key_name = aws_key_pair.generated_key.key_name
 
-    connection {
-    type = "ssh"
-    user = "ec2-user"
-    host = self.public_ip
-    private_key = "${file("private_key.pem")}"
-    timeout = "2m"
-    }
+#    connection {
+#    type = "ssh"
+#    user = "ec2-user"
+#    host = self.public_ip
+#    private_key = "${file("private_key.pem")}"
+#   timeout = "2m"
+#    }
 
-  provisioner "remote-exec" {  
-    inline = ["sudo apt-get update", 
-    "sudo apt-get install python3-dev", 
-    "sudo apt-get install libmysqlclient-dev", 
-    "sudo apt-get install unzip", 
-    "sudo apt-get install libpq-dev",
-    "sudo apt-get install python-dev",
-    "sudo apt-get install libxml2-dev",
-    "sudo apt-get install libxslt1-dev", 
-    "sudo apt-get install libldap2-dev", 
-    "sudo apt-get install libsasl2-dev",
-    "sudo apt-get install libffi-dev"]
+#  provisioner "remote-exec" {  
+#    inline = ["sudo apt-get update", 
+#    "sudo apt-get install python3-dev", 
+#    "sudo apt-get install libmysqlclient-dev", 
+#    "sudo apt-get install unzip", 
+#    "sudo apt-get install libpq-dev",
+#    "sudo apt-get install python-dev",
+#    "sudo apt-get install libxml2-dev",
+#    "sudo apt-get install libxslt1-dev", 
+#    "sudo apt-get install libldap2-dev", 
+#    "sudo apt-get install libsasl2-dev",
+#    "sudo apt-get install libffi-dev"]
   }
 }
 
