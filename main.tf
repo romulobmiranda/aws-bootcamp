@@ -92,41 +92,65 @@ resource "aws_route_table_association" "public-subnet" {
 
 #CRIAR O GRUPO DE SEGURANÇA
 resource "aws_security_group" "acessords" {
-    name = "acessords"
-    vpc_id = aws_vpc.vpc-bootcamp.id
+  name = "acessords"
+  vpc_id = aws_vpc.vpc-bootcamp.id
 
-    ingress {
-        from_port = 3306
-        to_port = 3306
-        protocol = "tcp"
-        cidr_blocks = ["10.0.0.0/16"]
-    }
+  ingress {
+    from_port = 3306
+    to_port = 3306
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
 
-    egress {
-        from_port = 0
-        to_port = 0
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 resource "aws_security_group" "acessoapp" {
-    name = "acessoapp"
-    vpc_id = aws_vpc.vpc-bootcamp.id
+  name = "acessoapp"
+  vpc_id = aws_vpc.vpc-bootcamp.id
 
-    ingress {
-        from_port = 80
-        to_port = 80
-        protocol = "tcp"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+  ingress {
+    from_port = 80
+    to_port = 80
+    protocol = "tcp"
+    cidr_blocks = ["0.0.0.0/0"],
 
-    egress {
-        from_port = 80
-        to_port = 80
-        protocol = "-1"
-        cidr_blocks = ["0.0.0.0/0"]
-    }
+    from_port = 22
+    to_port = 22
+    protocol = "tcp"
+    cidr_blocks = ["10.1.0.0/16"]
+  }
+
+  egress {
+    from_port = 80
+    to_port = 80
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+}
+
+resource "aws_security_group" "bastion-sg" {
+  name   = "bastion-security-group"
+  vpc_id = aws_vpc.vpc-bastion.id
+
+  ingress {
+    protocol    = "tcp"
+    from_port   = 22
+    to_port     = 22
+    cidr_blocks = ["0.0.0.0/0"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
+  }
 }
 
 #GERAR SSH KEYS
