@@ -92,7 +92,7 @@ resource "aws_instance" "app_server" {
     type = "ssh"
     user = "ec2-user"
     host = self.public_ip
-    private_key = tls_private_key.example
+    private_key = "${file("~/.ssh/authorized_keys")}"
     timeout = "2m"
     }
 
