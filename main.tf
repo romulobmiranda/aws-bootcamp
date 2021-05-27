@@ -92,7 +92,7 @@ resource "aws_instance" "app_server" {
     type = "ssh"
     user = "ec2-user"
     host = self.public_ip
-    private_key = "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCEy5UyiwNP2nmrg8dT6z6djww05mkqgOxE6rwKetWhsGwsdeVama+IWZE7HdB+4VMeGB9JpMC+4GIvxFSwKidy3KGEor+IVMDawiTlvpW/zdeT9aM2sQEfmp5MJTW7jlq8EF6wEWHbVunk6SB3Z2FksxC0kb3tk6DZnGytHfKRDKcKj8NanP2UnrIatJkxvsxdq8CNqEF1NlgPcPwnHdrVu0tzvLxwDRHL+xqOaoEfsYqczjMoaIuCfe+Vstwg7lBYFfpBnz7ngAXyjsyqCm507e7cX6Jpa90S7O9UfDAitF/V0VdgEX1SYbd0VrSXRttXR59ccbJJxALY7MyRm1Bd key_ec2"
+    private_key = "${file("private_key.pem")}"
     timeout = "2m"
     }
 
