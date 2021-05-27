@@ -93,7 +93,6 @@ resource "aws_instance" "app_server" {
       user = "ec2-user"
       host = self.public_ip
       private_key = "${file("~/.ssh/authorized_keys)}"
-      timeout = "2m"
     }
 
   provisioner "remote-exec" {  
