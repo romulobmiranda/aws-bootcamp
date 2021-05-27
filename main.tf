@@ -19,6 +19,46 @@ resource "aws_vpc" "vpc-bootcamp" {
   cidr_block = "10.0.0.0/16"
 }
 
+resource "aws_vpc" "vpc-bastion" {
+  cidr_block = "10.1.0.0/16"
+}
+
+#CRIAR PEERING ENTRE VPCS
+resource "aws_vpc_peering_connection" "conexao-vpcs" {
+  peer_owner_id = var.peer_owner_id
+  peer_vpc_id = aws_vpc.vpc-bootcamp.id
+  vpc_id = aws_vpc.vpc-bastion.id
+  auto_accept = true
+}
+
+resource "aws_vpc_peering_connection_options" "conexao-vpcs" {
+  vpc_peering_connection_id = aws_vpc_peering_connection.conexao-vpcs.id
+
+  accepter {
+    allow_remote_vpc_dns_resolution = true
+  }
+
+  requester {
+    allow_vpc_to_remote_classic_link = true
+    allow_classic_link_to_remote_vpc = true
+  }
+}
+
+#CRIAR SUBNET PÚBLICA - BASTION
+resource "aws_subnet" "bastion-subnet" {
+  vpc_id = aws_vpc.vpc-bastion.id
+  cidr_block = "10.1.1.0/24"
+}
+
+resource "aws_route_table" "bastion-subnet" {
+  vpc_id = aws_vpc.vpc-bastion.id
+}
+
+resource "aws_route_table_association" "bastion-subnet" {
+  subnet_id = aws_subnet.bastion-subnet.id
+  route_table_id = aws_route_table.bastion-subnet.id
+}
+
 #CRIAR SUBNET PRIVADA
 resource "aws_subnet" "priv-subnet" {
   vpc_id     = aws_vpc.vpc-bootcamp.id
@@ -91,30 +131,14 @@ resource "aws_key_pair" "generated_key" {
 resource "aws_instance" "app_server" {
   ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
-  subnet_id = aws_subnet.public-subnet.id
+  subnet_id = aws_subnet.priv-subnet.id
+}
+
+resource "aws_instance" "app_server" {
+  ami           = "ami-0747bdcabd34c712a"
+  instance_type = "t2.micro"
+  subnet_id = aws_subnet.bastion-subnet.id
   key_name = aws_key_pair.generated_key.key_name
-
-#    connection {
-#    type = "ssh"
-#    user = "ec2-user"
-#    host = self.public_ip
-#    private_key = "${file("private_key.pem")}"
-#   timeout = "2m"
-#    }
-
-#  provisioner "remote-exec" {  
-#    inline = ["sudo apt-get update", 
-#    "sudo apt-get install python3-dev", 
-#    "sudo apt-get install libmysqlclient-dev", 
-#    "sudo apt-get install unzip", 
-#    "sudo apt-get install libpq-dev",
-#    "sudo apt-get install python-dev",
-#    "sudo apt-get install libxml2-dev",
-#    "sudo apt-get install libxslt1-dev", 
-#    "sudo apt-get install libldap2-dev", 
-#    "sudo apt-get install libsasl2-dev",
-#    "sudo apt-get install libffi-dev"]
-#  }
 }
 
 # CRIAR INSTÂNCIA RDS
