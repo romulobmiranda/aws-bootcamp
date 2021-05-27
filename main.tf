@@ -88,11 +88,11 @@ resource "aws_instance" "app_server" {
   subnet_id = aws_subnet.public-subnet.id
   key_name = aws_key_pair.generated_key.key_name
 
-      connection {
-      type = "ssh"
-      user = "ec2-user"
-      host = self.public_ip
-      private_key = "${file("~/.ssh/authorized_keys)}"
+    connection {
+    type = "ssh"
+    user = "ec2-user"
+    host = self.public_ip
+    private_key = "${file("~/.ssh/authorized_keys)}"
     }
 
   provisioner "remote-exec" {  
