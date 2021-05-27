@@ -92,7 +92,7 @@ resource "aws_route_table_association" "public-subnet" {
 #CRIAR O GRUPO DE SEGURANÇA
 resource "aws_security_group" "acessords" {
   name = "acessords"
-  vpc_id = aws_vpc.vpc-bootcamp.id
+#vpc_id = aws_vpc.vpc-bootcamp.id
 
   ingress {
     from_port = 3306
@@ -111,7 +111,7 @@ resource "aws_security_group" "acessords" {
 
 resource "aws_security_group" "acessoapp" {
   name = "acessoapp"
-  vpc_id = aws_vpc.vpc-bootcamp.id
+#vpc_id = aws_vpc.vpc-bootcamp.id
 
   ingress {
     from_port = 80
@@ -137,7 +137,7 @@ resource "aws_security_group" "acessoapp" {
 
 resource "aws_security_group" "bastion-sg" {
   name   = "bastion-security-group"
-  vpc_id = aws_vpc.vpc-bastion.id
+#vpc_id = aws_vpc.vpc-bastion.id
 
   ingress {
     protocol    = "tcp"
@@ -176,7 +176,7 @@ resource "aws_instance" "app_server" {
   ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
-  security_groups = aws_security_group.acessoapp.id
+  vpc_security_group_ids = [aws_security_group.acessoapp.id]
 }
 
 resource "aws_instance" "bastion" {
@@ -184,7 +184,7 @@ resource "aws_instance" "bastion" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.bastion-subnet.id
   key_name = aws_key_pair.generated_key.key_name
-  security_groups = aws_security_group.bastion-sg.id  
+  vpc_security_group_ids = [aws_security_group.bastion-sg.id]
 }
 
 # CRIAR INSTÂNCIA RDS
@@ -198,5 +198,5 @@ resource "aws_db_instance" "bdrds" {
   password = "Admin123456"
   port = "3306"
   storage_type = "gp2"
-  security_group_names = aws_security_group.acessords.id
+  security_group_names = [aws_security_group.acessords.id]
 }  
