@@ -195,6 +195,7 @@ resource "aws_instance" "app_server" {
 #  security_groups = aws_security_group.acessoapp.id
 }
 
+#CRIAR BASTION HOST
 resource "aws_instance" "bastion" {
   name = "Bastion Host"
   ami           = "ami-00399ec92321828f5"
