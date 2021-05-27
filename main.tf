@@ -90,10 +90,6 @@ resource "aws_route_table_association" "public-subnet" {
   route_table_id = aws_route_table.public-subnet.id
 }
 
-#resource "aws_db_subnet_group" "default" {
-#  subnet_ids = [aws_subnet.priv-subnet.id]
-#}
-
 #CRIAR O GRUPO DE SEGURANÇA
 resource "aws_security_group" "acessords" {
   name = "acessords"
@@ -183,7 +179,7 @@ resource "aws_network_interface" "bastion-subnet" {
 }
 
 resource "aws_db_subnet_group" "bdrds" {
-  name       = "bdrds"
+  name = "bdrds"
   subnet_ids = aws_subnet.priv-subnet.id
 }
 
@@ -224,4 +220,4 @@ resource "aws_db_instance" "bdrds" {
   storage_type = "gp2"
 #  db_subnet_group_name = aws_db_subnet_group.default.id
 #  vpc_security_group_ids = aws_db_security_group.acessords.id
-}  
+}
