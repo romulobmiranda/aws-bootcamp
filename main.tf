@@ -77,7 +77,7 @@ resource "tls_private_key" "example" {
 }
 
 resource "aws_key_pair" "generated_key" {
-  key_name   = var.key_name
+  key_name   = "ec2app"
   public_key = tls_private_key.example.public_key_openssh
 }
 
@@ -92,7 +92,7 @@ resource "aws_instance" "app_server" {
     type = "ssh"
     user = "ec2-user"
     host = self.public_ip
-    private_key = "${file(~/.ssh/authorized_keys)}"
+    private_key = tls_private_key.example
     timeout = "2m"
     }
 
