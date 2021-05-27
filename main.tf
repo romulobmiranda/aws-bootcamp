@@ -30,18 +30,18 @@ resource "aws_vpc_peering_connection" "conexao-vpcs" {
   auto_accept = true
 }
 
-resource "aws_vpc_peering_connection_options" "conexao-vpcs" {
-  vpc_peering_connection_id = aws_vpc_peering_connection.conexao-vpcs.id
+#resource "aws_vpc_peering_connection_options" "conexao-vpcs" {
+#  vpc_peering_connection_id = aws_vpc_peering_connection.conexao-vpcs.id
 
-  accepter {
-    allow_remote_vpc_dns_resolution = true
-  }
+#  accepter {
+#    allow_remote_vpc_dns_resolution = true
+#  }
 
-  requester {
-    allow_vpc_to_remote_classic_link = true
-    allow_classic_link_to_remote_vpc = true
-  }
-}
+#  requester {
+#    allow_vpc_to_remote_classic_link = true
+#    allow_classic_link_to_remote_vpc = true
+#  }
+#}
 
 #CRIAR SUBNET PÚBLICA - BASTION
 resource "aws_subnet" "bastion-subnet" {
@@ -176,7 +176,7 @@ resource "aws_instance" "app_server" {
   ami           = "ami-0747bdcabd34c712a"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
-  vpc_security_group_ids = [aws_security_group.acessoapp.id]
+  security_groups = [aws_security_group.acessoapp.id]
 }
 
 resource "aws_instance" "bastion" {
@@ -184,7 +184,7 @@ resource "aws_instance" "bastion" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.bastion-subnet.id
   key_name = aws_key_pair.generated_key.key_name
-  vpc_security_group_ids = [aws_security_group.bastion-sg.id]
+  security_groups = [aws_security_group.bastion-sg.id]
 }
 
 # CRIAR INSTÂNCIA RDS
