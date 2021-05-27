@@ -176,6 +176,7 @@ resource "aws_key_pair" "generated_key" {
 
 #CRIAR A INSTÂNCIA DO APP
 resource "aws_instance" "app_server" {
+  name = "AppServer"
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
@@ -183,6 +184,7 @@ resource "aws_instance" "app_server" {
 }
 
 resource "aws_instance" "bastion" {
+  name = "Bastion Host"
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.bastion-subnet.id
