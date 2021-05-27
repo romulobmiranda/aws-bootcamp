@@ -89,11 +89,26 @@ resource "aws_route_table_association" "public-subnet" {
   route_table_id = aws_route_table.public-subnet.id
 }
 
+
+resource "aws_db_subnet_group" "default" {
+  subnet_ids = [aws_subnet.priv-subnet.id]
+}
+
 #CRIAR O GRUPO DE SEGURANÇA
-resource "aws_db_security_group" "acessords" {
+resource "aws_security_group" "acessords" {
   name = "acessords"
   ingress {
-    cidr = "10.0.0.0/16"
+    from_port = 3306
+    to_port = 3306
+    protocol = "tcp"
+    cidr_blocks = ["10.0.0.0/16"]
+  }
+
+  egress {
+    from_port = 0
+    to_port = 0
+    protocol = "-1"
+    cidr_blocks = ["0.0.0.0/0"]
   }
 }
 
@@ -104,7 +119,7 @@ resource "aws_security_group" "acessoapp" {
   ingress {
     from_port = 80
     to_port = 80
-    protocol = "-1"
+    protocol = "0"
     cidr_blocks = ["0.0.0.0/0"]
   }
   
@@ -118,7 +133,7 @@ resource "aws_security_group" "acessoapp" {
   egress {
     from_port = 80
     to_port = 80
-    protocol = "-1"
+    protocol = "0"
     cidr_blocks = ["0.0.0.0/0"]
   }
 }
@@ -164,7 +179,7 @@ resource "aws_instance" "app_server" {
   ami           = "ami-00399ec92321828f5"
   instance_type = "t2.micro"
   subnet_id = aws_subnet.public-subnet.id
-  security_groups = [aws_security_group.acessoapp.id]
+  security_groups = aws_security_group.acessoapp.id
 }
 
 resource "aws_instance" "bastion" {
@@ -172,7 +187,7 @@ resource "aws_instance" "bastion" {
   instance_type = "t2.micro"
   subnet_id = aws_subnet.bastion-subnet.id
   key_name = aws_key_pair.generated_key.key_name
-  security_groups = [aws_security_group.bastion-sg.id]
+  security_groups = aws_security_group.bastion-sg.id
 }
 
 # CRIAR INSTÂNCIA RDS
@@ -186,6 +201,6 @@ resource "aws_db_instance" "bdrds" {
   password = "Admin123456"
   port = "3306"
   storage_type = "gp2"
-  db_subnet_group_name = aws_subnet.priv-subnet.id
+  db_subnet_group_name = aws_db_subnet_group.default.id
 #  vpc_security_group_ids = aws_db_security_group.acessords.id
 }  
