@@ -187,5 +187,5 @@ resource "aws_db_instance" "bdrds" {
   port = "3306"
   storage_type = "gp2"
   db_subnet_group_name = aws_subnet.priv-subnet.id
-  vpc_security_group_ids = aws_db_security_group.acessords.id
+#  vpc_security_group_ids = aws_db_security_group.acessords.id
 }  
